@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ejemplo de contenedor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            overflow: hidden;
+        }
+
+        .container {
+            background: #ed050522;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-template-columns: 1fr;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #daf6058f;
+            color: white;
+        }
+
+        .content {
+            overflow-y: auto;
+            overflow-x: auto;   
+        }
+
+        .footer {
+            background-color: #0524ed22; 
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">header</div>
+        <div class="content">
+            <div class="card" style="height: 6000px;">
+                Contenido dentro del contenedor
+            </div>
+        </div>
+        <div class="footer"> Footer</div> 
+    </div>
+</body>
+
+</html>

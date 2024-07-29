@@ -1,0 +1,34 @@
+﻿@inject IJSRuntime JS
+
+<div style="display: grid; grid-template-rows: auto 1fr;">
+
+    <div>
+        <div>Este es el componente de mapa</div>
+        <button @onclick="() => AddMark()">AddMark</button>
+    </div>
+
+    <div id="map" style="min-height: 400px; min-width: 400px; "></div>
+</div>
+
+@code {
+
+    private IJSObjectReference module = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || module != null)
+        {
+            return;
+        }
+
+        module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Controls/MapControl.razor.js");
+
+        await module.InvokeVoidAsync("InitializeMap");
+    }
+
+    async void AddMark(double lat = -22.92955, double @long = -45.44939, string fillColor = "#2f333399", string circleColor
+    = "#00ffFF99")
+    {
+        await module.InvokeVoidAsync("AddMark", new { lat, @long, fillColor, circleColor });
+    }
+}

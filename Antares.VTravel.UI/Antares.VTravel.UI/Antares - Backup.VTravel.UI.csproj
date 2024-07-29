@@ -5,15 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings> 
     <UserSecretsId>aspnet-Antares.VTravel.UI-44c8079d-565a-4c26-8146-9115cc42809d</UserSecretsId>
-		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-	</PropertyGroup>
-
-	<ItemGroup>
+  </PropertyGroup>
+   
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" /> 
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />  
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />

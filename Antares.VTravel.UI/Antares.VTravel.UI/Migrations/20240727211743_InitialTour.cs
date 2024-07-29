@@ -1,12 +1,12 @@
-﻿#nullable disable
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace Antares.VTravel.UI.Migrations
 {
-    using Microsoft.EntityFrameworkCore.Migrations;
-    using System;
-
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class InitialTour : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,27 @@ namespace Antares.VTravel.UI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tour",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LineId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsEntrance = table.Column<bool>(type: "bit", nullable: false),
+                    IsCritical = table.Column<bool>(type: "bit", nullable: false),
+                    IsExit = table.Column<bool>(type: "bit", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tour", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,6 +234,9 @@ namespace Antares.VTravel.UI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Tour");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
