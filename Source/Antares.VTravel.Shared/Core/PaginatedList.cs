@@ -1,0 +1,10 @@
+﻿namespace Antares.VTravel.Shared.Core;
+
+public class PaginatedList<TResult>
+{
+    public int Page { get; init; } = 1;
+    public int PerPage { get; init; } = 1;
+    public int Pages => 1 + RowsCount / PerPage;
+    public int RowsCount { get; init; }
+    public List<TResult> Items { get; init; } = new();
+}

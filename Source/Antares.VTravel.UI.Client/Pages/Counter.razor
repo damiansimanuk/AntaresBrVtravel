@@ -1,0 +1,40 @@
+﻿@page "/counter"
+@rendermode InteractiveWebAssembly
+@inject HttpMediator http
+@inject NotificationService NotificationService
+
+
+<PageTitle>Counter WASM</PageTitle>
+
+<h1>Counter WASM</h1>
+
+<p>Current count: @currentCount</p>
+<p>Last Msg: @lastMsg</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<RadzenButton Click=@IncrementCount Text="Base" ButtonStyle="ButtonStyle.Base" />
+
+@code {
+    int currentCount = 0;
+    string lastMsg;
+
+    private async Task IncrementCount()
+    {
+        try
+        {
+            var resp = await http.Send(new CreateToursRequest("hola", "Mundo"));
+            lastMsg = System.Text.Json.JsonSerializer.Serialize(resp.Value);
+            Console.WriteLine(lastMsg);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        Console.WriteLine(currentCount);
+        currentCount++;
+
+        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Button Clicked", Detail = "HOla mundo desde wasm" });
+    }
+}

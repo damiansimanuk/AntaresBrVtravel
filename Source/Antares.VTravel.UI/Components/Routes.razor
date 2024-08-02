@@ -1,0 +1,26 @@
+﻿@using System.Reflection
+
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="@AdditionalAssemblies">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>
+
+@code {
+    private IEnumerable<Assembly> AdditionalAssemblies = new Assembly[0];
+
+    protected override void OnInitialized()
+    {
+        if (Program.ClientAssembly != null)
+        {
+            AdditionalAssemblies = new[] { Program.ClientAssembly };
+        }
+
+        base.OnInitialized();
+    }
+}
