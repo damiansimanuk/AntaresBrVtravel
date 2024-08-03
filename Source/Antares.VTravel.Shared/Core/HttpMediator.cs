@@ -14,13 +14,24 @@ public record MediatorPostValueDto(string TypeName, string Content);
 
 public class HttpMediator(HttpClient http)
 {
-    public static string EndpointName { get; } = "HttpMediator/Invoke";
+    public static string EndpointName = "HttpMediator/Invoke";
 
     static List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).ToList();
     static HttpStatusCode[] successStatus = [HttpStatusCode.OK, HttpStatusCode.Created, HttpStatusCode.Accepted];
     static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
     public async Task<Result<TResponse>> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+    {
+        return await PostAsync<TResponse>(request, cancellationToken);
+    }
+
+    public async Task<Result<TResponse>> Send<TResponse>(IRequest<Result<TResponse>> request, CancellationToken cancellationToken = default)
+    {
+        var result = await PostAsync<Result<TResponse>>(request, cancellationToken);
+        return result.IsOk ? result.Value! : result.Errors!;
+    }
+
+    private async Task<Result<TResponse>> PostAsync<TResponse>(IBaseRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -58,8 +69,29 @@ public class HttpMediator(HttpClient http)
     public async Task Test()
     {
         int? id = null!;
-        var tour = await Send(new CreateToursRequest("lala", "nada"));
+        var tour = await Send(new CreateToursRequest(false, "lala", "nada"));
 
         tour.Match(t => t.CreatedAt, e => throw new Exception());
+
+
+        Result<int> test;
+
+        test = ErrorBuilder.Create()
+            .Add("Code", "Message", "Detail")
+            .Add(new Error("Code", "Message", "Detail"))
+            .GetErrors();
+
+        var errors = ErrorBuilder.Create()
+            .Add("Code", "Message", "Detail")
+            .Add(new Error("Code", "Message", "Detail"))
+            .Add(new Exception());
+
+        test = errors.HasError ? errors.GetErrors() : 2;
+        var test2 = errors.ErrorOr(33);
+
+        var errors2 = test2.Errors;
+        var value = test2.Value;
+
+        var test3 = errors.ErrorOr(() => "nada");
     }
 }

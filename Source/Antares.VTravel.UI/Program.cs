@@ -91,10 +91,7 @@ internal class Program
 
         app.MapGroup("/auth").MapIdentityApi<ApplicationUser>();
 
-        app.MapPost(HttpMediator.EndpointName, (IMediator mediator, MediatorPostValueDto request) =>
-        {
-            return mediator.Send(HttpMediator.Deserialize(request)!);
-        });
+        app.MapPost(HttpMediator.EndpointName, (IMediator m, MediatorPostValueDto r) => m.Send(HttpMediator.Deserialize(r)!));
 
         app.UseAuthentication();
         app.UseAuthorization();

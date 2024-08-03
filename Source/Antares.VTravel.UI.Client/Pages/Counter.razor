@@ -11,6 +11,10 @@
 <p>Current count: @currentCount</p>
 <p>Last Msg: @lastMsg</p>
 
+<RadzenCheckBox @bind-Value=@failure Name="Failure" />
+
+<p> Failure: @failure</p>
+
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 <RadzenButton Click=@IncrementCount Text="Base" ButtonStyle="ButtonStyle.Base" />
@@ -18,13 +22,14 @@
 @code {
     int currentCount = 0;
     string lastMsg;
+    bool failure;
 
     private async Task IncrementCount()
     {
         try
         {
-            var resp = await http.Send(new CreateToursRequest("hola", "Mundo"));
-            lastMsg = System.Text.Json.JsonSerializer.Serialize(resp.Value);
+            var resp = await http.Send(new CreateToursRequest(failure, "hola", "Mundo"));
+            lastMsg = JsonSerializer.Serialize(resp);
             Console.WriteLine(lastMsg);
         }
         catch (Exception e)
@@ -35,6 +40,11 @@
         Console.WriteLine(currentCount);
         currentCount++;
 
-        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Button Clicked", Detail = "HOla mundo desde wasm" });
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Button Clicked",
+                Detail = "HOla mundo desde wasm"
+            });
     }
 }
