@@ -28,7 +28,7 @@
     {
         try
         {
-            var resp = await http.Send(new CreateToursRequest(failure, "hola", "Mundo"));
+            var resp = await http.Send(new CreateTourRequest(failure, "hola", "Mundo"));
             lastMsg = JsonSerializer.Serialize(resp);
             Console.WriteLine(lastMsg);
         }

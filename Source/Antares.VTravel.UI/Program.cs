@@ -1,9 +1,12 @@
 using Antares.VTravel.Shared.Core;
 using Antares.VTravel.Shared.Dto;
 using Antares.VTravel.Shared.Request;
+using Antares.VTravel.UI;
 using Antares.VTravel.UI.Components;
 using Antares.VTravel.UI.Components.Account;
+using Antares.VTravel.UI.Core;
 using Antares.VTravel.UI.Data;
+using Antares.VTravel.UI.Mapper;
 using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -66,9 +69,12 @@ internal class Program
 
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-        builder.Services.AddHttpClient();
-        //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<HttpMediator>();
+        builder.Services.AddScoped<CurrentUser>();
+        builder.Services.AddScoped<AuthorizationService>();
+        builder.Services.AddHttpClient(); 
+        builder.Services.AddSingleton<MapperService>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 

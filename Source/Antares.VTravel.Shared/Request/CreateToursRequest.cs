@@ -4,7 +4,7 @@ using Antares.VTravel.Shared.Core;
 using Antares.VTravel.Shared.Dto;
 using MediatR;
 
-public record CreateToursRequest(
+public record CreateTourRequest(
     bool failure,
     string Name,
     string Description)

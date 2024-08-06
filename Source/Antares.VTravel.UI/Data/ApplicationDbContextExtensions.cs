@@ -1,4 +1,4 @@
-using Antares.VTravel.UI.Data;
+namespace Antares.VTravel.UI.Data;
 using Microsoft.EntityFrameworkCore;
 
 public static class ApplicationDbContextExtensions

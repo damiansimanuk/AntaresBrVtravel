@@ -7,6 +7,7 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
+using Antares.VTravel.Shared.Dto;
 
 public record MediatorPostDto(string TypeName);
 
@@ -28,7 +29,7 @@ public class HttpMediator(HttpClient http)
     public async Task<Result<TResponse>> Send<TResponse>(IRequest<Result<TResponse>> request, CancellationToken cancellationToken = default)
     {
         var result = await PostAsync<Result<TResponse>>(request, cancellationToken);
-        return result.IsOk ? result.Value! : result.Errors!;
+        return result.IsSuccess ? result.Value! : result.Errors!;
     }
 
     private async Task<Result<TResponse>> PostAsync<TResponse>(IBaseRequest request, CancellationToken cancellationToken = default)
@@ -69,7 +70,7 @@ public class HttpMediator(HttpClient http)
     public async Task Test()
     {
         int? id = null!;
-        var tour = await Send(new CreateToursRequest(false, "lala", "nada"));
+        var tour = await Send(new CreateTourRequest(false, "lala", "nada"));
 
         tour.Match(t => t.CreatedAt, e => throw new Exception());
 
@@ -87,11 +88,58 @@ public class HttpMediator(HttpClient http)
             .Add(new Exception());
 
         test = errors.HasError ? errors.GetErrors() : 2;
-        var test2 = errors.ErrorOr(33);
+        var test2 = errors.ToResult(33);
+
+        Result<int> resultFromError = errors.GetErrors();
+        resultFromError.Map(t => 33);
 
         var errors2 = test2.Errors;
         var value = test2.Value;
 
-        var test3 = errors.ErrorOr(() => "nada");
+        var test3 = errors.ToResult(() => "nada");
+
+        var result = Validation1(null!)
+            .Bind(Validation2)
+            .Bind(Validation2)
+            .Bind(SendEmail)
+            .Map(e => e ? 3f : 1d);
+
+
+        var realResult = ValidateInput(null)
+            .Bind(Validation2);
+    }
+
+
+    public Result<TourDto> ValidateInput(TourDto tourDto)
+    {
+        var errors = ErrorBuilder.Create();
+        errors.Validate(() => string.IsNullOrEmpty(tourDto.Name), () => new Error("Invalid Name", "null"));
+        errors.Add(string.IsNullOrEmpty(tourDto.Name), () => new Error("Invalid Name", "null"));
+        errors.Add(string.IsNullOrEmpty(tourDto.Name), new Error("Invalid Name", "null"));
+        return errors.ToResult(tourDto);
+    }
+
+    public Result<TourDto> Validation1(TourDto tourDto)
+    {
+        if (object.Equals(tourDto, null))
+            return new Error("Serialize", "");
+
+        return tourDto;
+    }
+
+    public Result<TourDto> Validation2(TourDto tourDto)
+    {
+        if (object.Equals(tourDto, null))
+            return new Error("Serialize", "");
+
+        return tourDto;
+    }
+
+    public Result<bool> SendEmail(TourDto tourDto)
+    {
+        if (object.Equals(tourDto, null))
+            return new Error("Serialize", "");
+
+        return true;
     }
 }

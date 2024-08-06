@@ -1,16 +1,12 @@
+namespace Antares.VTravel.UI.Data;
+using Antares.VTravel.UI.Core.Domain;
 
-public class Tour
+public class Tour : Entity<int>
 {
-    public int Id { get; protected set; }
-    public int LineId { get; protected set; }
-    public string Name { get; protected set; }
-    public string? DisplayName { get; protected set; }
-    public bool IsEntrance { get; protected set; }
-    public bool IsCritical { get; protected set; }
-    public bool IsExit { get; protected set; }
-    public ApplicationUser User { get; protected set; } = null!;
-    public string UserId { get; protected set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
-    public DateTimeOffset? CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-    public bool Active { get; protected set; }
+    public int LineId { get; set; }
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public ApplicationUser? User { get; set; }
+    public string? UserId { get; set; }
+    public bool Active { get; set; }
 }
