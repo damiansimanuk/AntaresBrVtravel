@@ -1,8 +1,9 @@
 namespace Antares.VTravel.UI.Data;
 using Microsoft.EntityFrameworkCore;
 using Antares.VTravel.UI.Core.Database;
+using Antares.VTravel.Shared.Core.Event;
 
-public class VTravelDbContext(DbContextOptions<VTravelDbContext> options) : UnitOfWorkContext(options)
+public class VTravelDbContext(DbContextOptions<VTravelDbContext> options, DomainEventBus eventBus) : UnitOfWorkContext(options, eventBus)
 {
     public const string SCHEMA = nameof(VTravel);
 

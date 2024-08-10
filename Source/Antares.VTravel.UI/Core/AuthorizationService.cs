@@ -1,13 +1,13 @@
 ﻿namespace Antares.VTravel.UI.Core;
-using Antares.VTravel.Shared.Core;
+using Antares.VTravel.Shared.Core.ResultFluent;
 
 public class AuthorizationService(CurrentUser currentUser, IConfiguration configuration)
-{  
-    public bool _skipAuthorization { get; set; }= configuration.GetValue("SkipAuthorization", false);
-  
+{
+    public bool SkipAuthorization { get; set; } = configuration.GetValue("SkipAuthorization", false);
+
     private bool CheckClaimsPermission(string? permission, params string[] permissions)
     {
-        if (_skipAuthorization)
+        if (SkipAuthorization)
         {
             return true;
         }
@@ -29,17 +29,15 @@ public class AuthorizationService(CurrentUser currentUser, IConfiguration config
 
     public Result<bool> IsValidatePermissions(params string[] permission)
     {
-        var allowed = CheckClaimsPermission(null, permission);
-        return ErrorBuilder.Create()
-            .Add(!allowed, () => new Error("Unauthorize", "Insufficient permissions to perform this operation."))
-            .ToResult(allowed);
+        return CheckClaimsPermission(null, permission)
+            ? true
+            : new Error("Unauthorize", "Insufficient permissions to perform this operation.");
     }
 
     public Result<bool> IsValidCustomPermissions(string value, params string[] permission)
     {
-        var allowed = CheckClaimsPermission(value, permission);
-        return ErrorBuilder.Create()
-            .Add(!allowed, () => new Error("Unauthorize", "Insufficient permissions to perform this operation."))
-            .ToResult(allowed);
+        return CheckClaimsPermission(value, permission)
+            ? true
+            : new Error("Unauthorize", "Insufficient permissions to perform this operation.");
     }
 }

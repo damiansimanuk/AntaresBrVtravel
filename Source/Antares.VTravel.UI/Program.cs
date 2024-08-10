@@ -1,4 +1,6 @@
-using Antares.VTravel.Shared.Core;
+using Antares.VTravel.Core.Remote;
+using Antares.VTravel.Shared.Core.Event;
+using Antares.VTravel.Shared.Core.Remote;
 using Antares.VTravel.Shared.Dto;
 using Antares.VTravel.Shared.Request;
 using Antares.VTravel.UI;
@@ -12,6 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +46,6 @@ internal class Program
 
 
         builder.Services.AddEndpointsApiExplorer();
-        //builder.Services.AddSwaggerGen();
         builder.Services.AddOpenApiDocument();
 
         builder.Services.AddAuthorization();
@@ -52,13 +54,14 @@ internal class Program
         {
             options.DefaultScheme = IdentityConstants.ApplicationScheme;
             options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        })
-            .AddIdentityCookies();
+        }).AddIdentityCookies();
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+        builder.Services.AddDbContext<VTravelDbContext>(options => options.UseSqlServer(connectionString));
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -70,13 +73,17 @@ internal class Program
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<HttpMediator>();
+        builder.Services.AddSingleton<DomainEventBus>();
+        builder.Services.AddSingleton<EventBusToMediatorHub>();
+        //builder.Services.AddScoped<MediatorHubClient>(s => new MediatorHubClient(new Uri(" ")));
+        //builder.Services.AddScoped<HttpMediator>();
         builder.Services.AddScoped<CurrentUser>();
         builder.Services.AddScoped<AuthorizationService>();
-        builder.Services.AddHttpClient(); 
+        builder.Services.AddHttpClient();
         builder.Services.AddSingleton<MapperService>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+        builder.Services.AddSignalR();
 
         var app = builder.Build();
 
@@ -98,6 +105,8 @@ internal class Program
         app.MapGroup("/auth").MapIdentityApi<ApplicationUser>();
 
         app.MapPost(HttpMediator.EndpointName, (IMediator m, MediatorPostValueDto r) => m.Send(HttpMediator.Deserialize(r)!));
+        //app.MapBlazorHub();
+        app.MapHub<MediatorHubServer>("/signalr-mediator");
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -126,7 +135,8 @@ internal class Program
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
 
-        app.EnsureDatabaseCreated();
+        app.EnsureDatabaseCreated<ApplicationDbContext>();
+        app.EnsureDatabaseCreated<VTravelDbContext>();
 
         app.Run();
     }

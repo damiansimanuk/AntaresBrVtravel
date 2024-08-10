@@ -1,12 +1,15 @@
 namespace Antares.VTravel.UI.Core.Database;
 using Antares.VTravel.Shared.Core;
+using Antares.VTravel.Shared.Core.Event;
 using Microsoft.EntityFrameworkCore;
 
 public abstract class UnitOfWorkContext : DbContext
 {
+    private DomainEventBus? eventBus;
 
-    public UnitOfWorkContext(DbContextOptions options) : base(options)
+    public UnitOfWorkContext(DbContextOptions options, DomainEventBus eventBus) : base(options)
     {
+        this.eventBus = eventBus;
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -45,6 +48,7 @@ public abstract class UnitOfWorkContext : DbContext
 
     public virtual void SendMessage(params IDomainEvent[] events)
     {
+        eventBus?.SendMessage(events);
     }
 
     private void FillUpdatedAt()

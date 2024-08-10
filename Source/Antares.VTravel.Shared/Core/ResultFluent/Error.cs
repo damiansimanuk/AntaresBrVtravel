@@ -1,4 +1,4 @@
-﻿namespace Antares.VTravel.Shared.Core;
+﻿namespace Antares.VTravel.Shared.Core.ResultFluent;
 
 public record Error(
     string Code,

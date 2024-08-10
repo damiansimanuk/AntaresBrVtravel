@@ -1,8 +1,9 @@
 ﻿@page "/counter"
-@rendermode InteractiveWebAssembly
-@inject HttpMediator http
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@inject NavigationManager Navigation
+@inject MediatorHubClient hub
 @inject NotificationService NotificationService
-
+@implements IAsyncDisposable
 
 <PageTitle>Counter WASM</PageTitle>
 
@@ -12,8 +13,10 @@
 <p>Last Msg: @lastMsg</p>
 
 <RadzenCheckBox @bind-Value=@failure Name="Failure" />
+<RadzenCheckBox @bind-Value=@exception Name="Exception" />
 
 <p> Failure: @failure</p>
+<p> Exception: @exception</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
@@ -21,16 +24,55 @@
 
 @code {
     int currentCount = 0;
-    string lastMsg;
+    string lastMsg = "";
     bool failure;
+    bool exception;
+    IDisposable? tourCreatedDisposable;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await hub.StartAsync();
+        tourCreatedDisposable = hub.Subscribe<TourCreated>(OnTourCreated);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        tourCreatedDisposable?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    private void OnTourCreated(TourCreated tour)
+    {
+        Console.WriteLine(" Client WASM OnTourCreated ..... {0} {1} ", tour.GetType().FullName, JsonSerializer.Serialize(tour));
+
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Tour Generado",
+                Detail = $"Tour {tour.TourId}, {tour.TourName}",
+            });
+    }
 
     private async Task IncrementCount()
     {
         try
         {
-            var resp = await http.Send(new CreateTourRequest(failure, "hola", "Mundo"));
-            lastMsg = JsonSerializer.Serialize(resp);
+            // var resp = await hubConnection!.InvokeAsync<Result<TourDto>>("Request", HubRequestSerializer.Wrap(new CreateTourRequest(failure, "hola", "Mundo")));
+            var resp = await hub.RequestAsync(new CreateTourRequest(failure, exception, "hola", "Mundo"));
+            // var resp = await http.Send<Shared.Dto.TourDto>(new CreateTourRequest(failure, "hola", "Mundo"));
+
+            lastMsg = resp.Match(s => JsonSerializer.Serialize(s), e => $"[{e[0].Code}]: {e[0].Message}");
             Console.WriteLine(lastMsg);
+
+            if (resp.IsError)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error al generar el tour",
+                        Detail = resp.FirstError!.Message,
+                    });
+            }
         }
         catch (Exception e)
         {
@@ -39,12 +81,5 @@
 
         Console.WriteLine(currentCount);
         currentCount++;
-
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = NotificationSeverity.Info,
-                Summary = "Button Clicked",
-                Detail = "HOla mundo desde wasm"
-            });
     }
 }

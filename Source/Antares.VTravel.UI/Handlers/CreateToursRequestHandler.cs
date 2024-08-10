@@ -1,5 +1,7 @@
 ﻿namespace Antares.VTravel.UI.Handlers;
 using Antares.VTravel.Shared.Core;
+using Antares.VTravel.Shared.Core.Event;
+using Antares.VTravel.Shared.Core.ResultFluent;
 using Antares.VTravel.Shared.Dto;
 using Antares.VTravel.Shared.Request;
 using Antares.VTravel.UI.Core;
@@ -10,28 +12,67 @@ using MediatR;
 public class CreateTourRequestHandler(
     VTravelDbContext dbContext,
     CurrentUser currentUser,
+    DomainEventBus eventBus,
     MapperService mapper
     ) : IRequestHandler<CreateTourRequest, Result<TourDto>>
 {
+
     public async Task<Result<TourDto>> Handle(CreateTourRequest request, CancellationToken cancellationToken)
     {
-        return await ErrorBuilder.Create()
-            .Add(!currentUser.IsAuthenticated, Error.Invalid("Invalid User"))
-            .Add(string.IsNullOrWhiteSpace(request.Name), Error.Invalid("Invalid name"))
-            .Add(string.IsNullOrWhiteSpace(request.Description), Error.Invalid("Invalid Description"))
-            .ToResultAsync(async () =>
-            {
-                var tour = new Tour
-                {
-                    Name = request.Name,
-                    UserId = currentUser.Name,
-                    Description = request.Description,
-                };
+        if (request.Exception)
+        {
+            throw new InvalidOperationException("Excepcion genearad por pedido del cliente!");
+        }
 
-                dbContext.Add(tour);
-                await dbContext.SaveChangesAsync(cancellationToken);
+        var eb = ErrorBuilder.Create()
+            .Add(request.Failure, new Error("Alto", $"Error, Failure {request.Failure}"))
+            //.Add(!currentUser.IsAuthenticated, Error.Invalid("Authentication fail"))
+            .Add(string.IsNullOrWhiteSpace(request.Name), Error.Invalid("Name is empty"))
+            .Add(string.IsNullOrWhiteSpace(request.Description), Error.Invalid("Description is empty"));
 
-                return mapper.ToDto(tour);
-            });
+        if (eb.HasError)
+        {
+            //eventBus.SendMessage(new TourCreated(1, "tour.Name", "tour.Description"));
+            return eb.GetErrors();
+        }
+
+        var tour = new Tour
+        {
+            Name = request.Name,
+            //UserId = currentUser.Name,
+            Description = request.Description,
+        };
+
+        tour.AddDomainEvent(() => new TourCreated(tour.Id, tour.Name, tour.Description));
+
+        dbContext.Add(tour);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return mapper.ToDto(tour);
     }
+
+    //public async Task<Result<TourDto>> Handle(CreateTourRequest request, CancellationToken cancellationToken)
+    //{
+    //    return await ErrorBuilder.Create()
+    //        //.Add(!currentUser.IsAuthenticated, Error.Invalid("Authentication fail"))
+    //        .Add(string.IsNullOrWhiteSpace(request.Name), Error.Invalid("Name is empty"))
+    //        .Add(string.IsNullOrWhiteSpace(request.Description), Error.Invalid("Description is empty"))
+    //        .ToResult()
+    //        .BindAsync(async () =>
+    //        {
+    //            var tour = new Tour
+    //            {
+    //                Name = request.Name,
+    //                //UserId = currentUser.Name,
+    //                Description = request.Description,
+    //            };
+
+    //            tour.AddDomainEvent(() => new TourCreated(tour.Id, tour.Name, tour.Description));
+
+    //            dbContext.Add(tour);
+    //            await dbContext.SaveChangesAsync(cancellationToken);
+
+    //            return mapper.ToDto(tour);
+    //        });
+    //}
 }
