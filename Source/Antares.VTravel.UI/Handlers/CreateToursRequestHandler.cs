@@ -1,9 +1,9 @@
-﻿namespace Antares.VTravel.UI.Handlers;
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Core.Event;
-using Antares.VTravel.Shared.Core.ResultFluent;
-using Antares.VTravel.Shared.Dto;
-using Antares.VTravel.Shared.Request;
+﻿namespace Antares.VTravel.UI.Handlers; 
+using Antares.VTravel.Client.Dto;
+using Antares.VTravel.Client.Event;
+using Antares.VTravel.Client.Request;
+using Antares.VTravel.Shared.Event;
+using Antares.VTravel.Shared.ResultFluent;
 using Antares.VTravel.UI.Core;
 using Antares.VTravel.UI.Data;
 using Antares.VTravel.UI.Mapper;

@@ -1,4 +1,4 @@
-﻿namespace Antares.VTravel.Shared.Core.Event;
+﻿namespace Antares.VTravel.Shared.Event;
 
 public class ActionOnDispose(Action onDispose, IDisposable? disposable = null) : IDisposable
 {

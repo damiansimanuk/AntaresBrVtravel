@@ -5,17 +5,17 @@
 @using Microsoft.AspNetCore.Components.Web
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.JSInterop
 @using Antares.VTravel.UI.Client
 @using Antares.VTravel.UI.Client.Controls
 @using Antares.VTravel.UI.Client.Pages
-@using Antares.VTravel.Shared.Core
-@using Antares.VTravel.Shared.Core.Remote
-@using Antares.VTravel.Shared.Core.Event
-@using Antares.VTravel.Shared.Core.ResultFluent
-@using Antares.VTravel.Shared.Dto
-@using Antares.VTravel.Shared.Request
-@using Microsoft.AspNetCore.SignalR.Client
+@using Antares.VTravel.Shared.Remote
+@using Antares.VTravel.Shared.Event
+@using Antares.VTravel.Shared.ResultFluent
+@using Antares.VTravel.Client.Dto
+@using Antares.VTravel.Client.Request
+@using Antares.VTravel.Client.Event
 @using Radzen
 @using Radzen.Blazor
 @using System.Text.Json

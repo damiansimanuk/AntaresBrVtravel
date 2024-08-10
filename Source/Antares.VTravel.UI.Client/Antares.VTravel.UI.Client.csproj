@@ -23,6 +23,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Antares.VTravel.Client\Antares.VTravel.Client.csproj" />
     <ProjectReference Include="..\Antares.VTravel.Shared\Antares.VTravel.Shared.csproj" />
   </ItemGroup> 
 

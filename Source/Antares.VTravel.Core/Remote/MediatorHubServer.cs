@@ -1,36 +1,11 @@
 ﻿namespace Antares.VTravel.Core.Remote;
-using Antares.VTravel.Shared.Core.Event;
 using MediatR;
-using System.Collections.Concurrent;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using Microsoft.VisualBasic;
 using Microsoft.Extensions.Logging;
-using Antares.VTravel.Shared.Request;
-using System.Text.Json.Nodes;
 using System.Text.Json;
-using Antares.VTravel.Shared.Core.Remote;
-using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
-using Antares.VTravel.Shared.Core.ResultFluent;
-
-public class EventBusToMediatorHub
-{
-    private readonly IHubContext<MediatorHubServer> hubContext;
-    private readonly DomainEventBus events;
-
-    public EventBusToMediatorHub(IHubContext<MediatorHubServer> hubContext, DomainEventBus events)
-    {
-        this.hubContext = hubContext;
-        this.events = events;
-        this.events.SubscribeAll(OnNextMessage);
-    }
-
-    private void OnNextMessage(IDomainEvent e)
-    {
-        hubContext.Clients.Group(e.EventName).SendAsync("OnNextMessage", HubRequestSerializer.Wrap(e));
-    }
-}
+using Antares.VTravel.Shared.Remote;
+using Antares.VTravel.Shared.ResultFluent;
 
 public class MediatorHubServer(
     EventBusToMediatorHub _,

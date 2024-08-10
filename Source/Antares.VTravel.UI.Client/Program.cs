@@ -1,4 +1,4 @@
-using Antares.VTravel.Shared.Core.Remote;
+using Antares.VTravel.Shared.Remote; 
 using Antares.VTravel.UI.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

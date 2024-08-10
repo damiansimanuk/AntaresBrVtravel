@@ -1,7 +1,7 @@
 namespace Antares.VTravel.UI.Data;
 using Microsoft.EntityFrameworkCore;
 using Antares.VTravel.UI.Core.Database;
-using Antares.VTravel.Shared.Core.Event;
+using Antares.VTravel.Shared.Event;
 
 public class VTravelDbContext(DbContextOptions<VTravelDbContext> options, DomainEventBus eventBus) : UnitOfWorkContext(options, eventBus)
 {

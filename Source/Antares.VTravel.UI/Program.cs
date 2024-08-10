@@ -1,8 +1,8 @@
 using Antares.VTravel.Core.Remote;
-using Antares.VTravel.Shared.Core.Event;
-using Antares.VTravel.Shared.Core.Remote;
-using Antares.VTravel.Shared.Dto;
-using Antares.VTravel.Shared.Request;
+using Antares.VTravel.Client.Dto;
+using Antares.VTravel.Client.Event;
+using Antares.VTravel.Shared.Remote;
+using Antares.VTravel.Client.Request;
 using Antares.VTravel.UI;
 using Antares.VTravel.UI.Components;
 using Antares.VTravel.UI.Components.Account;
@@ -22,6 +22,7 @@ using Radzen;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
+using Antares.VTravel.Shared.Event;
 
 internal class Program
 {

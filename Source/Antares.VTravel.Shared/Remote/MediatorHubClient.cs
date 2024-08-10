@@ -1,14 +1,9 @@
-﻿namespace Antares.VTravel.Shared.Core.Remote;
-
+﻿namespace Antares.VTravel.Shared.Remote;
 using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
-using Antares.VTravel.Shared.Core.Event;
-using Microsoft.VisualBasic;
 using System.Text.Json;
-using System.Threading;
-using Antares.VTravel.Shared.Core.ResultFluent;
-using Antares.VTravel.Shared.Dto;
-using System.Reflection;
+using Antares.VTravel.Shared.ResultFluent;
+using Antares.VTravel.Shared.Event;
 
 public class MediatorHubClient
 {

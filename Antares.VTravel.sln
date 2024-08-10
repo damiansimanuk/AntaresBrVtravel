@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Antares.VTravel.UI.Client",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antares.VTravel.Core", "Source\Antares.VTravel.Core\Antares.VTravel.Core.csproj", "{154F8DBF-3C2C-4D4B-A9E0-31532907BB88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antares.VTravel.Client", "Source\Antares.VTravel.Client\Antares.VTravel.Client.csproj", "{ED4D4CB9-CC7E-4791-A724-C1893B139669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{154F8DBF-3C2C-4D4B-A9E0-31532907BB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154F8DBF-3C2C-4D4B-A9E0-31532907BB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{154F8DBF-3C2C-4D4B-A9E0-31532907BB88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED4D4CB9-CC7E-4791-A724-C1893B139669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED4D4CB9-CC7E-4791-A724-C1893B139669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED4D4CB9-CC7E-4791-A724-C1893B139669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED4D4CB9-CC7E-4791-A724-C1893B139669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

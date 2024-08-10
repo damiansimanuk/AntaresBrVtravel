@@ -1,6 +1,7 @@
-﻿namespace Antares.VTravel.Shared.Request;
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Dto;
+﻿namespace Antares.VTravel.Client.Request;
+
+using Antares.VTravel.Client.Dto;
+using Antares.VTravel.Shared; 
 using MediatR;
 
 public record GetTourListRequest(

@@ -1,7 +1,7 @@
-﻿namespace Antares.VTravel.Shared.Core.Event;
+﻿namespace Antares.VTravel.Shared.Event;
 
 using System;
-  
+
 public record DomainEventBase<T> : IDomainEvent<T>
 {
     private static string guid = Guid.NewGuid().ToString("D");

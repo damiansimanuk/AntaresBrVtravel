@@ -1,4 +1,4 @@
-﻿namespace Antares.VTravel.Shared.Core.Remote;
+﻿namespace Antares.VTravel.Shared.Remote;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

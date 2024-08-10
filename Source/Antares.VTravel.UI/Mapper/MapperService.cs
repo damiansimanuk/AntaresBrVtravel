@@ -1,7 +1,7 @@
 ﻿namespace Antares.VTravel.UI.Mapper;
 
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Dto;
+using Antares.VTravel.Client.Dto;
+using Antares.VTravel.Shared; 
 using Antares.VTravel.UI.Data;
 using AutoMapper;
 

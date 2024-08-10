@@ -1,7 +1,7 @@
 namespace Antares.VTravel.UI.Core.Domain;
 using System.Collections.Concurrent;
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Core.Event;
+using Antares.VTravel.Shared;
+using Antares.VTravel.Shared.Event;
 
 public abstract class Entity<TKey> : IEntity<TKey>
 {

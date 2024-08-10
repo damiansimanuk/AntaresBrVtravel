@@ -1,5 +1,5 @@
 ﻿namespace Antares.VTravel.UI.Core;
-using Antares.VTravel.Shared.Core.ResultFluent;
+using Antares.VTravel.Shared.ResultFluent;
 
 public class AuthorizationService(CurrentUser currentUser, IConfiguration configuration)
 {

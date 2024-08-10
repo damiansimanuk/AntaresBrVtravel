@@ -1,4 +1,4 @@
-﻿namespace Antares.VTravel.Shared.Core.ResultFluent;
+﻿namespace Antares.VTravel.Shared.ResultFluent;
 
 public static class Result
 {
@@ -81,7 +81,7 @@ public static class Result
     public static Result<T> Failure<T>(params Error[] errors) => new(default!, errors);
 
     public static Result<T> Exception<T>(Exception e)
-    { 
+    {
         var code = e.GetType().Name;
         var error = new Error(code, e.Message, e.StackTrace);
         return new(default, error);

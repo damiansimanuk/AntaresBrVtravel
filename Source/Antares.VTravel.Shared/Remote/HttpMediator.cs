@@ -1,4 +1,4 @@
-﻿namespace Antares.VTravel.Shared.Core.Remote;
+﻿namespace Antares.VTravel.Shared.Remote;
 
 using MediatR;
 using System.Text.Json;
@@ -6,10 +6,10 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
-using Antares.VTravel.Shared.Core.ResultFluent;
 using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Antares.VTravel.Shared.ResultFluent;
 
 public record MediatorPostValueDto(string TypeName, string Content);
 

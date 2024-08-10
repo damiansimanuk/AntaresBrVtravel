@@ -1,4 +1,4 @@
-namespace Antares.VTravel.Shared.Dto;
+namespace Antares.VTravel.Client.Dto;
 
 public record TourDto(
     int Id,

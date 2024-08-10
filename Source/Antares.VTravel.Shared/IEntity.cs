@@ -1,5 +1,5 @@
-namespace Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Core.Event;
+namespace Antares.VTravel.Shared;
+using Antares.VTravel.Shared.Event;
 
 public interface IEntity
 {

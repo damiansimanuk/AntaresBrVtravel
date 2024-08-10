@@ -1,6 +1,7 @@
 namespace Antares.VTravel.UI.Core.Database;
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Core.Event;
+
+using Antares.VTravel.Shared;
+using Antares.VTravel.Shared.Event;
 using Microsoft.EntityFrameworkCore;
 
 public abstract class UnitOfWorkContext : DbContext

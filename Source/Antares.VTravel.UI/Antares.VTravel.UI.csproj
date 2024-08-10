@@ -22,6 +22,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Antares.VTravel.Client\Antares.VTravel.Client.csproj" />
 	  <ProjectReference Include="..\Antares.VTravel.Core\Antares.VTravel.Core.csproj" />
 	  <ProjectReference Include="..\Antares.VTravel.Shared\Antares.VTravel.Shared.csproj" />
 	  <ProjectReference Include="..\Antares.VTravel.UI.Client\Antares.VTravel.UI.Client.csproj" />

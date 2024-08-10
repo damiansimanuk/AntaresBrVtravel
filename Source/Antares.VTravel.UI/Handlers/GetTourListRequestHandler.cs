@@ -1,11 +1,11 @@
 namespace Antares.VTravel.UI.Handlers;
-using Antares.VTravel.Shared.Core;
-using Antares.VTravel.Shared.Dto;
-using Antares.VTravel.Shared.Request;
+using Antares.VTravel.Client.Dto;
+using Antares.VTravel.Client.Request;
 using Antares.VTravel.UI.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Antares.VTravel.UI.Mapper;
+using Antares.VTravel.Shared;
 
 public class GetTourListRequestHandler(
     VTravelDbContext dbContext,
