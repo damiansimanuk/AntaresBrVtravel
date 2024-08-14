@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Antares.VTravel.Shared.Remote;
 using Antares.VTravel.Shared.ResultFluent;
+using Microsoft.AspNetCore.Authorization;
 
 public class MediatorHubServer(
     EventBusToMediatorHub _,
@@ -16,6 +17,7 @@ public class MediatorHubServer(
     HashSet<string> subscriptions = new();
     List<IDisposable> disposables = new();
 
+    [Authorize]
     public async Task<object> Request(JsonElement request)
     {
         try

@@ -1,5 +1,5 @@
 namespace Antares.VTravel.UI.Data;
-using Antares.VTravel.UI.Core.Domain;
+using Antares.VTravel.Core.Domain;
 
 public class Tour : Entity<int>
 {

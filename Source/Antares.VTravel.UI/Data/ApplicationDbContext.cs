@@ -1,6 +1,5 @@
 namespace Antares.VTravel.UI.Data;
 
-using Antares.VTravel.UI.Core.Database;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

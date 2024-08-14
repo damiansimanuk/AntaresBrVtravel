@@ -1,6 +1,6 @@
 namespace Antares.VTravel.UI.Data;
 using Microsoft.EntityFrameworkCore;
-using Antares.VTravel.UI.Core.Database;
+using Antares.VTravel.Core.Database;
 using Antares.VTravel.Shared.Event;
 
 public class VTravelDbContext(DbContextOptions<VTravelDbContext> options, DomainEventBus eventBus) : UnitOfWorkContext(options, eventBus)
@@ -17,6 +17,11 @@ public class VTravelDbContext(DbContextOptions<VTravelDbContext> options, Domain
 
     private void OnModelCreatingLocal(ModelBuilder builder, bool referenceOnly = false)
     {
+        builder.Entity<ApplicationUser>(b =>
+        {
+            b.ToTable("AspNetUsers", t => t.ExcludeFromMigrations(true));
+        });
+
         builder.Entity<Tour>(b =>
         {
             b.ToTable(nameof(Tour), SCHEMA, t => t.ExcludeFromMigrations(referenceOnly));

@@ -1,4 +1,4 @@
-namespace Antares.VTravel.UI.Core.Domain;
+namespace Antares.VTravel.Core.Domain;
 using System.Collections.Concurrent;
 using Antares.VTravel.Shared;
 using Antares.VTravel.Shared.Event;

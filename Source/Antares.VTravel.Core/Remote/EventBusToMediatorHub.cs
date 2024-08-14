@@ -17,6 +17,10 @@ public class EventBusToMediatorHub
 
     private void OnNextMessage(IDomainEvent e)
     {
-        hubContext.Clients.Group(e.EventName).SendAsync("OnNextMessage", HubRequestSerializer.Wrap(e));
+        try
+        {
+            hubContext.Clients.Group(e.EventName).SendAsync("OnNextMessage", HubRequestSerializer.Wrap(e));
+        }
+        catch { }
     }
 }

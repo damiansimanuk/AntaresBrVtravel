@@ -5,7 +5,9 @@ using System.Text.Json.Serialization;
 public static class HubRequestSerializer
 {
     static JsonSerializerOptions jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-    static List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().Where(t => t.FullName!.Contains(nameof(VTravel))).SelectMany(t => t.GetTypes()).ToList();
+    static List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies()
+        .SelectMany(t => { try { return t.GetTypes(); } catch { return []; } })
+        .ToList();
 
     static public object Deserialize(JsonElement request)
     {

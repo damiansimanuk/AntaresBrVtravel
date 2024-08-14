@@ -15,6 +15,7 @@ public class MediatorHubClient
     {
         hub = new HubConnectionBuilder().WithUrl(url).Build();
         events.SubscriptionAdded += OnSubscriptionAdded;
+        events.SubscriptionRemoved += OnSubscriptionRemoved;
         hub.On<JsonElement>("OnNextMessage", OnNextMessage);
         hub.Reconnected += OnReconnected;
     }
@@ -37,6 +38,15 @@ public class MediatorHubClient
             : (Result<TResponse>)response;
     }
 
+    public async Task<Result<TResponse>> RequestAsync<TResponse>(IRequest<TResponse> comando)
+    {
+        var jsonResponse = await hub.InvokeAsync<JsonElement>("Request", HubRequestSerializer.Wrap(comando));
+        var response = HubRequestSerializer.Deserialize(jsonResponse);
+        return response is Error err
+            ? Result.Failure<TResponse>(err)
+            : Result.Success((TResponse)response);
+    }
+
     public IDisposable Subscribe<TEvent>(Action<TEvent> onNextMessage) where TEvent : IDomainEvent
     {
         return events.Subscribe(onNextMessage);
@@ -56,8 +66,22 @@ public class MediatorHubClient
 
     private void OnSubscriptionAdded(object? sender, string eventName)
     {
-        Console.WriteLine($"MediatorHubClient OnSubscriptionAdded {eventName}");
-        hub.InvokeAsync("Subscribe", eventName);
+        try
+        {
+            Console.WriteLine($"MediatorHubClient OnSubscriptionAdded {eventName}");
+            hub.InvokeAsync("Subscribe", eventName);
+        }
+        catch { }
+    }
+
+    private void OnSubscriptionRemoved(object? sender, string eventName)
+    {
+        try
+        {
+            Console.WriteLine($"MediatorHubClient OnSubscriptionRemoved {eventName}");
+            hub.InvokeAsync("Unsubscribe", eventName);
+        }
+        catch { }
     }
 
     private async Task OnReconnected(string? arg)
@@ -66,8 +90,12 @@ public class MediatorHubClient
         connected = true;
         foreach (var eventName in events.GetEventNames())
         {
-            Console.WriteLine("OnReconnected Subscribe {0}", eventName);
-            await hub.InvokeAsync("Subscribe", eventName);
+            try
+            {
+                Console.WriteLine("OnReconnected Subscribe {0}", eventName);
+                await hub.InvokeAsync("Subscribe", eventName);
+            }
+            catch { }
         }
     }
 }

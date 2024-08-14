@@ -9,6 +9,13 @@ public static class ResultExtensions
             : Result.Success(() => func(result.Value!));
     }
 
+    public static Result<M> Bind<T, M>(this Result<T> result, Func<T, M> func)
+    {
+        return result.IsError
+            ? Result.Failure<M>(result.Errors)
+            : Result.Success(() => func(result.Value!));
+    }
+
     public static Task<Result<M>> BindAsync<T, M>(this Task<Result<T>> result, Func<T, Task<Result<M>>> func)
     {
         return Result.SuccessAsync(async () =>
@@ -16,6 +23,17 @@ public static class ResultExtensions
             var res = await Result.SuccessAsync(result);
             return res.IsSuccess
                 ? await func(res.Value!)
+                : Result.Failure<M>(res.Errors);
+        });
+    }
+
+    public static Task<Result<M>> BindAsync<T, M>(this Task<Result<T>> result, Func<T, Task<M>> func)
+    {
+        return Result.SuccessAsync(async () =>
+        {
+            var res = await Result.SuccessAsync(result);
+            return res.IsSuccess
+                ? Result.Success(await func(res.Value!))
                 : Result.Failure<M>(res.Errors);
         });
     }

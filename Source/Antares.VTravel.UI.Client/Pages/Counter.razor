@@ -5,6 +5,9 @@
 @inject NotificationService NotificationService
 @implements IAsyncDisposable
 
+
+
+
 <PageTitle>Counter WASM</PageTitle>
 
 <h1>Counter WASM</h1>
@@ -21,6 +24,8 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 <RadzenButton Click=@IncrementCount Text="Base" ButtonStyle="ButtonStyle.Base" />
+
+
 
 @code {
     int currentCount = 0;
@@ -55,28 +60,22 @@
 
     private async Task IncrementCount()
     {
-        try
-        {
-            // var resp = await hubConnection!.InvokeAsync<Result<TourDto>>("Request", HubRequestSerializer.Wrap(new CreateTourRequest(failure, "hola", "Mundo")));
-            var resp = await hub.RequestAsync(new CreateTourRequest(failure, exception, "hola", "Mundo"));
-            // var resp = await http.Send<Shared.Dto.TourDto>(new CreateTourRequest(failure, "hola", "Mundo"));
 
-            lastMsg = resp.Match(s => JsonSerializer.Serialize(s), e => $"[{e[0].Code}]: {e[0].Message}");
-            Console.WriteLine(lastMsg);
+        // var resp = await hubConnection!.InvokeAsync<Result<TourDto>>("Request", HubRequestSerializer.Wrap(new CreateTourRequest(failure, "hola", "Mundo")));
+        var resp = await hub.RequestAsync(new CreateTourRequest(failure, exception, "hola", "Mundo"));
+        // var resp = await http.Send<Shared.Dto.TourDto>(new CreateTourRequest(failure, "hola", "Mundo"));
 
-            if (resp.IsError)
-            {
-                NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = "Error al generar el tour",
-                        Detail = resp.FirstError!.Message,
-                    });
-            }
-        }
-        catch (Exception e)
+        lastMsg = resp.Match(s => JsonSerializer.Serialize(s), e => $"[{e[0].Code}]: {e[0].Message}");
+        Console.WriteLine(lastMsg);
+
+        if (resp.IsError)
         {
-            Console.WriteLine(e);
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error al generar el tour",
+                    Detail = resp.FirstError!.Message,
+                });
         }
 
         Console.WriteLine(currentCount);

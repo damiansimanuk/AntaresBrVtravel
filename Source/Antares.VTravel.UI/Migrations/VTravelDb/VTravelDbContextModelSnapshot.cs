@@ -63,6 +63,9 @@ namespace Antares.VTravel.UI.Migrations.VTravelDb
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TestX")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -71,7 +74,10 @@ namespace Antares.VTravel.UI.Migrations.VTravelDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationUser");
+                    b.ToTable("AspNetUsers", null, t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("Antares.VTravel.UI.Data.Tour", b =>

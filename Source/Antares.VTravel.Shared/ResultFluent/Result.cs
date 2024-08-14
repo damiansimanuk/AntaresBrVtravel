@@ -66,12 +66,17 @@ public static class Result
     {
         try
         {
-            return await successProcessor();
+            return Success(await successProcessor());
         }
         catch (Exception e)
         {
             return Exception<T>(e.InnerException ?? e);
         }
+    }
+
+    public static Task<Result<T>> SuccessAsync<T>(Func<T> successProcessor)
+    {
+        return Task.FromResult(Success(successProcessor));
     }
 
     public static Result<T> Success<T>(T v) => new(v);
@@ -112,6 +117,8 @@ public class Result<T>
             IsSuccess = true;
         }
     }
+
+    public T GetValue(T val = default!) => Value ?? val;
 
     public static implicit operator Result<T>(T v) => Result.Success(v);
     public static implicit operator Result<T>(Error e) => Result.Failure<T>(e);

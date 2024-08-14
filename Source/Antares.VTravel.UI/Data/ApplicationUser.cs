@@ -3,4 +3,5 @@ using Microsoft.AspNetCore.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+    public virtual string? TestX { get; set; }
 }

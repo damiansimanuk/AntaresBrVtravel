@@ -1,4 +1,4 @@
-namespace Antares.VTravel.UI.Core.Database;
+namespace Antares.VTravel.Core.Database;
 
 using Antares.VTravel.Shared;
 using Antares.VTravel.Shared.Event;

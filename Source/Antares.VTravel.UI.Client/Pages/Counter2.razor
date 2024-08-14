@@ -1,20 +1,53 @@
 ﻿@page "/counter2"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@inject MediatorHubClient hub
 
-<PageTitle>Counter Server</PageTitle>
 
-<h1>Counter Server</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<RadzenDataGrid @ref="grid"
+                style="height: 500px"
+                AllowFiltering="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="false"
+                PageSize="5"
+                LoadData="@LoadData"
+                Count="@(pagination.RowsCount)"
+                AllowPaging="true"
+                PageNumbersCount="@pagination.Page"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                IsLoading=@isLoading
+                ColumnWidth="200px"
+                Data="@pagination.Items">
+    <Columns>
+        <RadzenDataGridColumn Property="@nameof(TourDto.Id)" Title="Id" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.Name)" Title="Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.Description)" Title="Description" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.UserId)" Title="UserId" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.Active)" Title="Active" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.CreatedAt)" Title="Created At" MinWidth="200px" />
+        <RadzenDataGridColumn Property="@nameof(TourDto.UpdatedAt)" Title="Updated At" MinWidth="200px" />
+    </Columns>
+</RadzenDataGrid>
 
 @code {
-    private int currentCount = 0;
+    PaginatedList<TourDto> pagination = default;
+    bool isLoading = false;
+    RadzenDataGrid<TourDto> grid = null!;
 
-    private void IncrementCount()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine(currentCount);
-        currentCount++;
+        if (firstRender)
+        {
+            await hub.StartAsync();
+            await grid.Reload();
+        }
+    }
+
+    async Task LoadData(LoadDataArgs arg)
+    {
+        isLoading = true;
+        var result = await hub.RequestAsync(new GetTourListRequest("hola", arg.Skip!.Value, arg.Top!.Value));
+        pagination = result.GetValue();
+        isLoading = false;
     }
 }
