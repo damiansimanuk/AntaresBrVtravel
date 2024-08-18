@@ -2,17 +2,25 @@
 using Microsoft.AspNetCore.SignalR;
 using Antares.VTravel.Shared.Event;
 using Antares.VTravel.Shared.Remote;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using System.Threading;
+using System;
 
-public class EventBusToMediatorHub
+public class EventBusToMediatorHub(IHubContext<MediatorHubServer> hubContext, DomainEventBus events) : IHostedService
 {
-    private readonly IHubContext<MediatorHubServer> hubContext;
-    private readonly DomainEventBus events;
+    private IDisposable? disposable;
 
-    public EventBusToMediatorHub(IHubContext<MediatorHubServer> hubContext, DomainEventBus events)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        this.hubContext = hubContext;
-        this.events = events;
-        this.events.SubscribeAll(OnNextMessage);
+        disposable = events.SubscribeAll(OnNextMessage);
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        disposable?.Dispose();
+        return Task.CompletedTask;
     }
 
     private void OnNextMessage(IDomainEvent e)

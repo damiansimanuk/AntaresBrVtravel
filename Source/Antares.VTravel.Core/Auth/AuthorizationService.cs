@@ -1,7 +1,10 @@
-﻿namespace Antares.VTravel.UI.Core;
-using Antares.VTravel.Shared.ResultFluent;
+﻿namespace Antares.VTravel.Core.Auth;
 
-public class AuthorizationService(CurrentUser currentUser, IConfiguration configuration)
+using Antares.VTravel.Shared.ResultFluent;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+
+public class AuthorizationService(ICurrentUser currentUser, IConfiguration configuration)
 {
     public bool SkipAuthorization { get; set; } = configuration.GetValue("SkipAuthorization", false);
 

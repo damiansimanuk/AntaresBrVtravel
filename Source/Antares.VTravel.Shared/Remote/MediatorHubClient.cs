@@ -17,7 +17,8 @@ public class MediatorHubClient
         events.SubscriptionAdded += OnSubscriptionAdded;
         events.SubscriptionRemoved += OnSubscriptionRemoved;
         hub.On<JsonElement>("OnNextMessage", OnNextMessage);
-        hub.Reconnected += OnReconnected;
+        hub.Reconnected += OnConnected;
+        hub.Closed += OnClosedConnection;
     }
 
     public async Task StartAsync()
@@ -25,7 +26,7 @@ public class MediatorHubClient
         if (!connected)
         {
             await hub.StartAsync();
-            await OnReconnected(null!);
+            await OnConnected(null!);
         }
     }
 
@@ -52,14 +53,9 @@ public class MediatorHubClient
         return events.Subscribe(onNextMessage);
     }
 
-    public IDisposable SubscribeAll(Action<IDomainEvent> onNextMessage)
-    {
-        return events.SubscribeAll(onNextMessage);
-    }
-
     private void OnNextMessage(JsonElement notification)
     {
-        Console.WriteLine($"MediatorHubClient OnNextMessage {notification}");
+        //Console.WriteLine($"MediatorHubClient OnNextMessage {notification}");
         var msg = HubRequestSerializer.Deserialize(notification) as IDomainEvent;
         events.SendMessage(msg!);
     }
@@ -68,7 +64,7 @@ public class MediatorHubClient
     {
         try
         {
-            Console.WriteLine($"MediatorHubClient OnSubscriptionAdded {eventName}");
+            //Console.WriteLine($"MediatorHubClient OnSubscriptionAdded {eventName}");
             hub.InvokeAsync("Subscribe", eventName);
         }
         catch { }
@@ -78,24 +74,31 @@ public class MediatorHubClient
     {
         try
         {
-            Console.WriteLine($"MediatorHubClient OnSubscriptionRemoved {eventName}");
+            //Console.WriteLine($"MediatorHubClient OnSubscriptionRemoved {eventName}");
             hub.InvokeAsync("Unsubscribe", eventName);
         }
         catch { }
     }
 
-    private async Task OnReconnected(string? arg)
+    private async Task OnConnected(string? arg)
     {
-        Console.WriteLine($"MediatorHubClient OnReconnected ");
+        Console.WriteLine($"MediatorHubClient OnConnected");
         connected = true;
         foreach (var eventName in events.GetEventNames())
         {
             try
             {
-                Console.WriteLine("OnReconnected Subscribe {0}", eventName);
+                //Console.WriteLine("OnConnected Subscribe {0}", eventName);
                 await hub.InvokeAsync("Subscribe", eventName);
             }
             catch { }
         }
+    }
+
+    private Task OnClosedConnection(Exception? arg)
+    {
+        Console.WriteLine($"MediatorHubClient OnClosedConnection ");
+        connected = false;
+        return Task.CompletedTask;
     }
 }

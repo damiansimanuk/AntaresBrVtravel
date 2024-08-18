@@ -6,7 +6,6 @@ using Antares.VTravel.Client.Request;
 using Antares.VTravel.UI;
 using Antares.VTravel.UI.Components;
 using Antares.VTravel.UI.Components.Account;
-using Antares.VTravel.UI.Core;
 using Antares.VTravel.UI.Data;
 using Antares.VTravel.UI.Mapper;
 using Azure.Core;
@@ -23,6 +22,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using Antares.VTravel.Shared.Event;
+using Antares.VTravel.Core.Auth;
 
 internal class Program
 {
@@ -71,17 +71,13 @@ internal class Program
             .AddDefaultTokenProviders()
             .AddApiEndpoints();
 
-        builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddSingleton<DomainEventBus>();
-        builder.Services.AddSingleton<EventBusToMediatorHub>();
-        //builder.Services.AddScoped<MediatorHubClient>(s => new MediatorHubClient(new Uri(" ")));
-        //builder.Services.AddScoped<HttpMediator>();
-        builder.Services.AddScoped<CurrentUser>();
-        builder.Services.AddScoped<AuthorizationService>();
-        builder.Services.AddHttpClient();
+        builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>(); 
         builder.Services.AddSingleton<MapperService>();
+        builder.Services.AddSingleton<DomainEventBus>();
+        builder.Services.AddHostedService<EventBusToMediatorHub>();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
+        builder.Services.AddScoped<AuthorizationService>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
         builder.Services.AddSignalR();

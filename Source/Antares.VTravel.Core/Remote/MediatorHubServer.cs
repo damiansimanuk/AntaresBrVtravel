@@ -9,7 +9,6 @@ using Antares.VTravel.Shared.ResultFluent;
 using Microsoft.AspNetCore.Authorization;
 
 public class MediatorHubServer(
-    EventBusToMediatorHub _,
     IMediator mediator,
     ILogger<MediatorHubServer> logger
     ) : Hub
@@ -37,25 +36,25 @@ public class MediatorHubServer(
 
     public async Task Subscribe(string eventName)
     {
-        logger.LogInformation("Subscribe {0}", eventName);
+        logger.LogDebug("Subscribe {0}", eventName);
         await Groups.AddToGroupAsync(Context.ConnectionId, eventName);
     }
 
     public async Task Unsubscribe(string eventName)
     {
-        logger.LogInformation("Unsubscribe {0}", eventName);
+        logger.LogDebug("Unsubscribe {0}", eventName);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, eventName);
     }
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
-        logger.LogInformation("OnDisconnectedAsync");
+        logger.LogDebug("OnDisconnectedAsync");
         return base.OnDisconnectedAsync(exception);
     }
 
     public override Task OnConnectedAsync()
     {
-        logger.LogInformation("OnConnectedAsync");
+        logger.LogDebug("OnConnectedAsync");
         return base.OnConnectedAsync();
     }
 }

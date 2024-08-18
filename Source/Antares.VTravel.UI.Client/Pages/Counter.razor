@@ -1,11 +1,8 @@
 ﻿@page "/counter"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-@inject NavigationManager Navigation
 @inject MediatorHubClient hub
-@inject NotificationService NotificationService
+@inject NotificationService notification
 @implements IAsyncDisposable
-
-
 
 
 <PageTitle>Counter WASM</PageTitle>
@@ -50,7 +47,7 @@
     {
         Console.WriteLine(" Client WASM OnTourCreated ..... {0} {1} ", tour.GetType().FullName, JsonSerializer.Serialize(tour));
 
-        NotificationService.Notify(new NotificationMessage
+        notification.Notify(new NotificationMessage
             {
                 Severity = NotificationSeverity.Info,
                 Summary = "Tour Generado",
@@ -70,7 +67,7 @@
 
         if (resp.IsError)
         {
-            NotificationService.Notify(new NotificationMessage
+            notification.Notify(new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = "Error al generar el tour",
